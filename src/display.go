@@ -31,4 +31,5 @@ func displayUser(user *user, org *organization, tickets []*ticket) {
 			fmt.Printf("- %s\n", t.Subject)
 		}
 	}
+	fmt.Println("")
 }

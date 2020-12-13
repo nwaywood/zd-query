@@ -16,21 +16,43 @@ func buildCLIApp(orgMap OrgMap, orgIndexes IndexTypeMap, userMap UserMap, userIn
 				Usage: "Query users by a particular user value",
 				Subcommands: []*cli.Command{
 					{
-						Name:  "id",
-						Usage: "Query users by id",
+						Name:      "id",
+						Usage:     "Query users by id",
+						ArgsUsage: "<search value>",
 						Action: func(c *cli.Context) error {
 							validateArgs(c)
 
-							// get main object (from id lookup or from index)
+							// get primary search result
 							user := userMap[c.Args().First()]
 							if user == nil {
 								fmt.Println("User not found")
 								os.Exit(1)
 							}
-							// get secondary objects
+							// get secondary results
 							org, tickets := getUserOrgAndTickets(user, orgMap, ticketMap, ticketIndexes["submitter_id"])
-							// call display user/org/ticket
 							displayUser(user, org, tickets)
+
+							return nil
+						},
+					},
+					{
+						Name:      "org_id",
+						Usage:     "Query users by organization_id",
+						ArgsUsage: "<search value>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							// get primary search result
+							users := getUsersByIndex(c.Args().First(), userIndexes["organization_id"], userMap)
+							if len(users) == 0 {
+								fmt.Println("No users found")
+								os.Exit(1)
+							}
+							// get secondary results
+							for _, user := range users {
+								org, tickets := getUserOrgAndTickets(user, orgMap, ticketMap, ticketIndexes["submitter_id"])
+								displayUser(user, org, tickets)
+							}
 							return nil
 						},
 					},
