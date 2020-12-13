@@ -18,7 +18,7 @@ func buildCLIApp(orgMap OrgMap, orgIndexes IndexTypeMap, userMap UserMap, userIn
 					{
 						Name:      "id",
 						Usage:     "Query users by id",
-						ArgsUsage: "<search value>",
+						ArgsUsage: "<id>",
 						Action: func(c *cli.Context) error {
 							validateArgs(c)
 
@@ -38,7 +38,7 @@ func buildCLIApp(orgMap OrgMap, orgIndexes IndexTypeMap, userMap UserMap, userIn
 					{
 						Name:      "org_id",
 						Usage:     "Query users by organization_id",
-						ArgsUsage: "<search value>",
+						ArgsUsage: "<org_id>",
 						Action: func(c *cli.Context) error {
 							validateArgs(c)
 
@@ -63,18 +63,43 @@ func buildCLIApp(orgMap OrgMap, orgIndexes IndexTypeMap, userMap UserMap, userIn
 				Usage: "Query organizations by a particular organization value",
 				Subcommands: []*cli.Command{
 					{
-						Name:  "add",
-						Usage: "add a new template",
+						Name:      "id",
+						Usage:     "Query organizations by id",
+						ArgsUsage: "<id>",
 						Action: func(c *cli.Context) error {
-							fmt.Println("new task template: ", c.Args().First())
+							validateArgs(c)
+
+							// get primary search result
+							org := orgMap[c.Args().First()]
+							if org == nil {
+								fmt.Println("User not found")
+								os.Exit(1)
+							}
+							// get secondary results
+							users, tickets := getOrgUsersAndTickets(org, userMap, ticketMap, ticketIndexes["organization_id"], userIndexes["organization_id"])
+							displayOrg(org, users, tickets)
+
 							return nil
 						},
 					},
 					{
-						Name:  "remove",
-						Usage: "remove an existing template",
+						Name:      "name",
+						Usage:     "Query orgs by name",
+						ArgsUsage: "<name>",
 						Action: func(c *cli.Context) error {
-							fmt.Println("removed task template: ", c.Args().First())
+							validateArgs(c)
+
+							// get primary search result
+							orgs := getOrgsByIndex(c.Args().First(), orgIndexes["name"], orgMap)
+							if len(orgs) == 0 {
+								fmt.Println("No orgs found")
+								os.Exit(1)
+							}
+							// get secondary results
+							for _, org := range orgs {
+								users, tickets := getOrgUsersAndTickets(org, userMap, ticketMap, ticketIndexes["organization_id"], userIndexes["organization_id"])
+								displayOrg(org, users, tickets)
+							}
 							return nil
 						},
 					},
@@ -85,18 +110,43 @@ func buildCLIApp(orgMap OrgMap, orgIndexes IndexTypeMap, userMap UserMap, userIn
 				Usage: "Query tickets by a particular ticket value",
 				Subcommands: []*cli.Command{
 					{
-						Name:  "add",
-						Usage: "add a new template",
+						Name:      "id",
+						Usage:     "Query tickets by id",
+						ArgsUsage: "<id>",
 						Action: func(c *cli.Context) error {
-							fmt.Println("new task template: ", c.Args().First())
+							validateArgs(c)
+
+							// get primary search result
+							ticket := ticketMap[c.Args().First()]
+							if ticket == nil {
+								fmt.Println("Ticket not found")
+								os.Exit(1)
+							}
+							// get secondary results
+							org, user := getTicketOrgAndUser(ticket, orgMap, userMap)
+							displayTicket(ticket, org, user)
+
 							return nil
 						},
 					},
 					{
-						Name:  "remove",
-						Usage: "remove an existing template",
+						Name:      "org_id",
+						Usage:     "Query tickets by organization_id",
+						ArgsUsage: "<org_id>",
 						Action: func(c *cli.Context) error {
-							fmt.Println("removed task template: ", c.Args().First())
+							validateArgs(c)
+
+							// get primary search result
+							tickets := getTicketsByIndex(c.Args().First(), ticketIndexes["organization_id"], ticketMap)
+							if len(tickets) == 0 {
+								fmt.Println("No Tickets found")
+								os.Exit(1)
+							}
+							// get secondary results
+							for _, ticket := range tickets {
+								org, user := getTicketOrgAndUser(ticket, orgMap, userMap)
+								displayTicket(ticket, org, user)
+							}
 							return nil
 						},
 					},
