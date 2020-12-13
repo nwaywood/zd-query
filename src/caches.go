@@ -54,6 +54,7 @@ func buildUserCaches(users []*user) (UserMap, IndexTypeMap) {
 	return userMap, indexTypeMap
 
 }
+
 func buildTicketCaches(tickets []*ticket) (TicketMap, IndexTypeMap) {
 	ticketMap := make(TicketMap)
 	indexTypeMap := make(IndexTypeMap)

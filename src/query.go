@@ -5,10 +5,13 @@
 // need to perform the query as input parameters
 package main
 
+import (
+	"fmt"
+)
+
 // getUserOrgAndTickets returns the organization that a user belongs to and
 // all of the users tickets
-// TODO error handling
-func getUserOrgAndTickets(user *user, orgMap OrgMap, ticketMap TicketMap, submitterIDMap IndexMap) (*organization, []*ticket) {
+func getUserOrgAndTickets(user *user, orgMap OrgMap, ticketMap TicketMap, submitterIDMap IndexMap) (*organization, []*ticket, error) {
 	// get all tickets submitted by user
 	ticketIDs := submitterIDMap[user.ID.String()]
 	var tickets []*ticket
@@ -16,12 +19,14 @@ func getUserOrgAndTickets(user *user, orgMap OrgMap, ticketMap TicketMap, submit
 		tickets = append(tickets, ticketMap[id])
 	}
 
-	return orgMap[user.OrganizationID.String()], tickets
+	if orgMap[user.OrganizationID.String()] == nil {
+		return nil, nil, fmt.Errorf("User with id \"%s\" doesn't belong to an org", user.ID)
+	}
+	return orgMap[user.OrganizationID.String()], tickets, nil
 }
 
 // getOrgUsersAndTickets returns the users and tickets that belong
 // to the org
-// TODO error handling
 func getOrgUsersAndTickets(org *organization, userMap UserMap, ticketMap TicketMap, ticketOrgIDMap IndexMap, userOrgIDMap IndexMap) ([]*user, []*ticket) {
 	// get all the tickets of an org
 	ticketIDs := ticketOrgIDMap[org.ID.String()]
@@ -39,8 +44,16 @@ func getOrgUsersAndTickets(org *organization, userMap UserMap, ticketMap TicketM
 	return users, tickets
 }
 
-func getTicketOrgAndUser(ticket *ticket, orgMap OrgMap, userMap UserMap) (*organization, *user) {
-	return orgMap[ticket.OrganizationID.String()], userMap[ticket.SubmitterID.String()]
+// getTicketOrgAndUser returns the user and org of the ticket
+func getTicketOrgAndUser(ticket *ticket, orgMap OrgMap, userMap UserMap) (*organization, *user, error) {
+
+	if orgMap[ticket.OrganizationID.String()] == nil {
+		return nil, nil, fmt.Errorf("Ticket with id \"%s\" doesn't belong to an org", ticket.ID)
+	}
+	if userMap[ticket.SubmitterID.String()] == nil {
+		return nil, nil, fmt.Errorf("Ticket with id \"%s\" doesn't have a submitted user set", ticket.ID)
+	}
+	return orgMap[ticket.OrganizationID.String()], userMap[ticket.SubmitterID.String()], nil
 }
 
 // getUsersByIndex looks up the given key in the indexMap and resolves

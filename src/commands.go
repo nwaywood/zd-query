@@ -3,6 +3,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/urfave/cli/v2"
@@ -29,7 +30,10 @@ func buildCLIApp(orgMap OrgMap, orgIndexes IndexTypeMap, userMap UserMap, userIn
 								os.Exit(1)
 							}
 							// get secondary results
-							org, tickets := getUserOrgAndTickets(user, orgMap, ticketMap, ticketIndexes["submitter_id"])
+							org, tickets, err := getUserOrgAndTickets(user, orgMap, ticketMap, ticketIndexes["submitter_id"])
+							if err != nil {
+								log.Fatal(err)
+							}
 							displayUser(user, org, tickets)
 
 							return nil
@@ -50,7 +54,10 @@ func buildCLIApp(orgMap OrgMap, orgIndexes IndexTypeMap, userMap UserMap, userIn
 							}
 							// get secondary results
 							for _, user := range users {
-								org, tickets := getUserOrgAndTickets(user, orgMap, ticketMap, ticketIndexes["submitter_id"])
+								org, tickets, err := getUserOrgAndTickets(user, orgMap, ticketMap, ticketIndexes["submitter_id"])
+								if err != nil {
+									log.Fatal(err)
+								}
 								displayUser(user, org, tickets)
 							}
 							return nil
@@ -123,7 +130,10 @@ func buildCLIApp(orgMap OrgMap, orgIndexes IndexTypeMap, userMap UserMap, userIn
 								os.Exit(1)
 							}
 							// get secondary results
-							org, user := getTicketOrgAndUser(ticket, orgMap, userMap)
+							org, user, err := getTicketOrgAndUser(ticket, orgMap, userMap)
+							if err != nil {
+								log.Fatal(err)
+							}
 							displayTicket(ticket, org, user)
 
 							return nil
@@ -144,7 +154,10 @@ func buildCLIApp(orgMap OrgMap, orgIndexes IndexTypeMap, userMap UserMap, userIn
 							}
 							// get secondary results
 							for _, ticket := range tickets {
-								org, user := getTicketOrgAndUser(ticket, orgMap, userMap)
+								org, user, err := getTicketOrgAndUser(ticket, orgMap, userMap)
+								if err != nil {
+									log.Fatal(err)
+								}
 								displayTicket(ticket, org, user)
 							}
 							return nil
