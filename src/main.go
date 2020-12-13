@@ -2,12 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
-
-	"github.com/urfave/cli/v2"
 )
 
 func main() {
@@ -16,23 +13,16 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error loading data: %s", err)
 	}
-	fmt.Printf("%v \n%v \n%v", orgs[0], users[0], tickets[0])
-	fmt.Printf("\n%s\n", orgs[0].ID.String())
+	// fmt.Printf("%v \n%v \n%v", orgs[0], users[0], tickets[0])
+	// fmt.Printf("\n%s\n", orgs[0].ID.String())
 
 	// build caches from slices for fast queries
-	// orgMap, orgIndexes := buildOrgCaches(orgs)
-	// userMap, userIndexes := buildUserCaches(users)
-	// ticketMap, ticketIndexes := buildTicketCaches(tickets)
+	orgMap, orgIndexes := buildOrgCaches(orgs)
+	userMap, userIndexes := buildUserCaches(users)
+	ticketMap, ticketIndexes := buildTicketCaches(tickets)
 
 	// build the cli app
-	app := &cli.App{
-		Name:  "boom",
-		Usage: "make an explosive entrance",
-		Action: func(c *cli.Context) error {
-			fmt.Println("boom! I say!")
-			return nil
-		},
-	}
+	app := buildCLIApp(orgMap, orgIndexes, userMap, userIndexes, ticketMap, ticketIndexes)
 
 	err = app.Run(os.Args)
 	if err != nil {
@@ -41,13 +31,13 @@ func main() {
 }
 
 // TODO: refactor this
-func loadData() ([]*Organization, []*User, []*Ticket, error) {
+func loadData() ([]*organization, []*user, []*ticket, error) {
 	// load organisations into slice
 	orgBytes, err := ioutil.ReadFile("../data/organizations.json")
 	if err != nil {
 		return nil, nil, nil, err
 	}
-	var orgs []*Organization
+	var orgs []*organization
 	err = json.Unmarshal(orgBytes, &orgs)
 	if err != nil {
 		return nil, nil, nil, err
@@ -57,7 +47,7 @@ func loadData() ([]*Organization, []*User, []*Ticket, error) {
 	if err != nil {
 		return nil, nil, nil, err
 	}
-	var tickets []*Ticket
+	var tickets []*ticket
 	err = json.Unmarshal(ticketBytes, &tickets)
 	if err != nil {
 		return nil, nil, nil, err
@@ -67,7 +57,7 @@ func loadData() ([]*Organization, []*User, []*Ticket, error) {
 	if err != nil {
 		return nil, nil, nil, err
 	}
-	var users []*User
+	var users []*user
 	err = json.Unmarshal(userBytes, &users)
 	if err != nil {
 		return nil, nil, nil, err

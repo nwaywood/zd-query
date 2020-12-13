@@ -3,7 +3,7 @@ package main
 
 import "encoding/json"
 
-type Organization struct {
+type organization struct {
 	// json.Number to cleanse input data
 	// https://stackoverflow.com/questions/24480835/decoding-json-int-into-string
 	ID            json.Number `json:"_id"`
@@ -17,7 +17,7 @@ type Organization struct {
 	Tags          []string    `json:"tags"`
 }
 
-type User struct {
+type user struct {
 	ID             json.Number `json:"_id"`
 	URL            string      `json:"url"`
 	ExternalID     string      `json:"external_id"`
@@ -36,10 +36,10 @@ type User struct {
 	OrganizationID json.Number `json:"organization_id"`
 	Tags           []string    `json:"tags"`
 	Suspended      bool        `json:"suspended"`
-	Role           string      `json:"rule"`
+	Role           string      `json:"role"`
 }
 
-type Ticket struct {
+type ticket struct {
 	ID             string      `json:"_id"`
 	URL            string      `json:"url"`
 	ExternalID     string      `json:"external_id"`
