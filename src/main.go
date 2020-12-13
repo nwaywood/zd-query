@@ -33,7 +33,7 @@ func main() {
 // TODO: refactor this
 func loadData() ([]*organization, []*user, []*ticket, error) {
 	// load organisations into slice
-	orgBytes, err := ioutil.ReadFile("../data/organizations.json")
+	orgBytes, err := ioutil.ReadFile("./data/organizations.json")
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -43,7 +43,7 @@ func loadData() ([]*organization, []*user, []*ticket, error) {
 		return nil, nil, nil, err
 	}
 	// load tickets into slice
-	ticketBytes, err := ioutil.ReadFile("../data/tickets.json")
+	ticketBytes, err := ioutil.ReadFile("./data/tickets.json")
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -53,7 +53,7 @@ func loadData() ([]*organization, []*user, []*ticket, error) {
 		return nil, nil, nil, err
 	}
 	// load users into slice
-	userBytes, err := ioutil.ReadFile("../data/users.json")
+	userBytes, err := ioutil.ReadFile("./data/users.json")
 	if err != nil {
 		return nil, nil, nil, err
 	}
