@@ -16,13 +16,13 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error loading data: %s", err)
 	}
-	// fmt.Printf("%v %v %v", orgs[0], users[0], tickets[0])
-	// fmt.Printf("\n%s\n", orgs[0].ID.String())
+	fmt.Printf("%v \n%v \n%v", orgs[0], users[0], tickets[0])
+	fmt.Printf("\n%s\n", orgs[0].ID.String())
 
 	// build caches from slices for fast queries
-	orgMap, orgIndexes := buildOrgCaches(orgs)
-	userMap, userIndexes := buildUserCaches(users)
-	ticketMap, ticketIndexes := buildTicketCaches(tickets)
+	// orgMap, orgIndexes := buildOrgCaches(orgs)
+	// userMap, userIndexes := buildUserCaches(users)
+	// ticketMap, ticketIndexes := buildTicketCaches(tickets)
 
 	// build the cli app
 	app := &cli.App{
@@ -43,7 +43,7 @@ func main() {
 // TODO: refactor this
 func loadData() ([]*Organization, []*User, []*Ticket, error) {
 	// load organisations into slice
-	orgBytes, err := ioutil.ReadFile("./data/organizations.json")
+	orgBytes, err := ioutil.ReadFile("../data/organizations.json")
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -53,7 +53,7 @@ func loadData() ([]*Organization, []*User, []*Ticket, error) {
 		return nil, nil, nil, err
 	}
 	// load tickets into slice
-	ticketBytes, err := ioutil.ReadFile("./data/tickets.json")
+	ticketBytes, err := ioutil.ReadFile("../data/tickets.json")
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -63,7 +63,7 @@ func loadData() ([]*Organization, []*User, []*Ticket, error) {
 		return nil, nil, nil, err
 	}
 	// load users into slice
-	userBytes, err := ioutil.ReadFile("./data/users.json")
+	userBytes, err := ioutil.ReadFile("../data/users.json")
 	if err != nil {
 		return nil, nil, nil, err
 	}
