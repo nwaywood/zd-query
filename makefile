@@ -6,4 +6,4 @@ build:
 	
 clear-cache:
 	echo "Removing cache files"
-	(cd cache && rm *.json)
+	(cd .cache && rm *.json)

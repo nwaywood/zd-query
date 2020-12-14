@@ -1,25 +1,43 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 )
 
 func main() {
-	// load cache files
-	// if err (i.e. not all cache file exist, or they are corrupted), load cache from source files and write cache files to disk
-	// else if no err, directly call buildCLIApp
+	var err error
 
-	// load source data from json files into slices
-	orgs, users, tickets, err := loadData()
+	// declare data structures for the indexes
+	var orgMap OrgMap
+	var userMap UserMap
+	var ticketMap TicketMap
+	var orgIndexes IndexTypeMap
+	var userIndexes IndexTypeMap
+	var ticketIndexes IndexTypeMap
+
+	// load cache files, if they exist and are not corrupted
+	orgMap, orgIndexes, userMap, userIndexes, ticketMap, ticketIndexes, err = loadCacheFiles()
+	// if err, load cache from source files and write cache files to disk
 	if err != nil {
-		log.Fatalf("Error loading data: %s", err)
-	}
+		// load source data from json files into slices
+		orgs, users, tickets, err := loadData()
+		if err != nil {
+			log.Fatalf("Error loading data: %s", err)
+		}
 
-	// build caches from slices for fast queries
-	orgMap, orgIndexes := buildOrgCaches(orgs)
-	userMap, userIndexes := buildUserCaches(users)
-	ticketMap, ticketIndexes := buildTicketCaches(tickets)
+		// build caches from slices for fast queries
+		orgMap, orgIndexes = buildOrgCaches(orgs)
+		userMap, userIndexes = buildUserCaches(users)
+		ticketMap, ticketIndexes = buildTicketCaches(tickets)
+
+		// write cache files for future usage
+		err = writeCacheFiles(orgMap, orgIndexes, userMap, userIndexes, ticketMap, ticketIndexes)
+		if err != nil {
+			fmt.Printf("Error storing cache: %s", err)
+		}
+	}
 
 	// build the cli app
 	app := buildCLIApp(orgMap, orgIndexes, userMap, userIndexes, ticketMap, ticketIndexes)
