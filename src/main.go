@@ -7,7 +7,8 @@ import (
 
 func main() {
 	// load cache files
-	// if err, load cache from source files and write cache files to disk
+	// if err (i.e. not all cache file exist, or they are corrupted), load cache from source files and write cache files to disk
+	// else if no err, directly call buildCLIApp
 
 	// load source data from json files into slices
 	orgs, users, tickets, err := loadData()
