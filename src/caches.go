@@ -116,9 +116,22 @@ func buildUserCaches(users []*user) (UserMap, IndexTypeMap) {
 
 func buildTicketCaches(tickets []*ticket) (TicketMap, IndexTypeMap) {
 	ticketMap := make(TicketMap)
+	// initialise index maps
 	indexTypeMap := make(IndexTypeMap)
 	indexTypeMap["organization_id"] = make(IndexMap)
 	indexTypeMap["submitter_id"] = make(IndexMap)
+	indexTypeMap["url"] = make(IndexMap)
+	indexTypeMap["external_id"] = make(IndexMap)
+	indexTypeMap["created_at"] = make(IndexMap)
+	indexTypeMap["subject"] = make(IndexMap)
+	indexTypeMap["description"] = make(IndexMap)
+	indexTypeMap["priority"] = make(IndexMap)
+	indexTypeMap["status"] = make(IndexMap)
+	indexTypeMap["assignee_id"] = make(IndexMap)
+	indexTypeMap["tags"] = make(IndexMap)
+	indexTypeMap["has_incidents"] = make(IndexMap)
+	indexTypeMap["due_at"] = make(IndexMap)
+	indexTypeMap["via"] = make(IndexMap)
 
 	for _, ticket := range tickets {
 		// build ticketMap
@@ -127,6 +140,20 @@ func buildTicketCaches(tickets []*ticket) (TicketMap, IndexTypeMap) {
 		// build indexes
 		indexTypeMap["organization_id"][ticket.OrganizationID.String()] = append(indexTypeMap["organization_id"][ticket.OrganizationID.String()], ticket.ID)
 		indexTypeMap["submitter_id"][ticket.SubmitterID.String()] = append(indexTypeMap["submitter_id"][ticket.SubmitterID.String()], ticket.ID)
+		indexTypeMap["assignee_id"][ticket.AssigneeID.String()] = append(indexTypeMap["assignee_id"][ticket.AssigneeID.String()], ticket.ID)
+		indexTypeMap["url"][ticket.URL] = append(indexTypeMap["url"][ticket.URL], ticket.ID)
+		indexTypeMap["external_id"][ticket.ExternalID] = append(indexTypeMap["external_id"][ticket.ExternalID], ticket.ID)
+		indexTypeMap["created_at"][ticket.CreatedAt] = append(indexTypeMap["created_at"][ticket.CreatedAt], ticket.ID)
+		indexTypeMap["subject"][ticket.Subject] = append(indexTypeMap["subject"][ticket.Subject], ticket.ID)
+		indexTypeMap["description"][ticket.Description] = append(indexTypeMap["description"][ticket.Description], ticket.ID)
+		indexTypeMap["priority"][ticket.Priority] = append(indexTypeMap["priority"][ticket.Priority], ticket.ID)
+		indexTypeMap["status"][ticket.Status] = append(indexTypeMap["status"][ticket.Status], ticket.ID)
+		indexTypeMap["due_at"][ticket.DueAt] = append(indexTypeMap["due_at"][ticket.DueAt], ticket.ID)
+		indexTypeMap["via"][ticket.Via] = append(indexTypeMap["via"][ticket.Via], ticket.ID)
+		indexTypeMap["has_incidents"][strconv.FormatBool(ticket.HasIncidents)] = append(indexTypeMap["has_incidents"][strconv.FormatBool(ticket.HasIncidents)], ticket.ID)
+		for _, tag := range ticket.Tags {
+			indexTypeMap["tags"][tag] = append(indexTypeMap["tags"][tag], ticket.ID)
+		}
 	}
 	return ticketMap, indexTypeMap
 }

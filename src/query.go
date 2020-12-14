@@ -51,7 +51,7 @@ func getTicketOrgAndUser(ticket *ticket, orgMap OrgMap, userMap UserMap) (*organ
 		return nil, nil, fmt.Errorf("Ticket with id \"%s\" doesn't belong to an org", ticket.ID)
 	}
 	if userMap[ticket.SubmitterID.String()] == nil {
-		return nil, nil, fmt.Errorf("Ticket with id \"%s\" doesn't have a submitted user set", ticket.ID)
+		return nil, nil, fmt.Errorf("Ticket with id \"%s\" doesn't have a valid submitted user set", ticket.ID)
 	}
 	return orgMap[ticket.OrganizationID.String()], userMap[ticket.SubmitterID.String()], nil
 }

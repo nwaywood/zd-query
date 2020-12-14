@@ -413,20 +413,176 @@ func buildCLIApp(orgMap OrgMap, orgIndexes IndexTypeMap, userMap UserMap, userIn
 						Action: func(c *cli.Context) error {
 							validateArgs(c)
 
-							// get primary search result
-							tickets := getTicketsByIndex(c.Args().First(), ticketIndexes["organization_id"], ticketMap)
-							if len(tickets) == 0 {
-								fmt.Println("No Tickets found")
-								os.Exit(1)
-							}
-							// get secondary results
-							for _, ticket := range tickets {
-								org, user, err := getTicketOrgAndUser(ticket, orgMap, userMap)
-								if err != nil {
-									log.Fatal(err)
-								}
-								displayTicket(ticket, org, user)
-							}
+							queryTicketAndPrintResults(c.Args().First(), ticketIndexes["organization_id"], ticketMap, orgMap, userMap)
+
+							return nil
+						},
+					},
+					{
+						Name:      "url",
+						Usage:     "Query tickets by url",
+						ArgsUsage: "<url>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryTicketAndPrintResults(c.Args().First(), ticketIndexes["url"], ticketMap, orgMap, userMap)
+
+							return nil
+						},
+					},
+					{
+						Name:      "submitter_id",
+						Usage:     "Query tickets by submitter_id",
+						ArgsUsage: "<submitter_id>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryTicketAndPrintResults(c.Args().First(), ticketIndexes["submitter_id"], ticketMap, orgMap, userMap)
+
+							return nil
+						},
+					},
+					{
+						Name:      "external_id",
+						Usage:     "Query tickets by external_id",
+						ArgsUsage: "<external_id>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryTicketAndPrintResults(c.Args().First(), ticketIndexes["external_id"], ticketMap, orgMap, userMap)
+
+							return nil
+						},
+					},
+					{
+						Name:      "created_at",
+						Usage:     "Query tickets by created_at",
+						ArgsUsage: "<created_at>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryTicketAndPrintResults(c.Args().First(), ticketIndexes["created_at"], ticketMap, orgMap, userMap)
+
+							return nil
+						},
+					},
+					{
+						Name:      "type",
+						Usage:     "Query tickets by type",
+						ArgsUsage: "<type>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryTicketAndPrintResults(c.Args().First(), ticketIndexes["type"], ticketMap, orgMap, userMap)
+
+							return nil
+						},
+					},
+					{
+						Name:      "subject",
+						Usage:     "Query tickets by subject",
+						ArgsUsage: "<subject>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryTicketAndPrintResults(c.Args().First(), ticketIndexes["subject"], ticketMap, orgMap, userMap)
+
+							return nil
+						},
+					},
+					{
+						Name:      "description",
+						Usage:     "Query tickets by description",
+						ArgsUsage: "<description>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryTicketAndPrintResults(c.Args().First(), ticketIndexes["description"], ticketMap, orgMap, userMap)
+
+							return nil
+						},
+					},
+					{
+						Name:      "priority",
+						Usage:     "Query tickets by priority",
+						ArgsUsage: "<priority>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryTicketAndPrintResults(c.Args().First(), ticketIndexes["priority"], ticketMap, orgMap, userMap)
+
+							return nil
+						},
+					},
+					{
+						Name:      "status",
+						Usage:     "Query tickets by status",
+						ArgsUsage: "<status>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryTicketAndPrintResults(c.Args().First(), ticketIndexes["status"], ticketMap, orgMap, userMap)
+
+							return nil
+						},
+					},
+					{
+						Name:      "assignee_id",
+						Usage:     "Query tickets by assignee_id",
+						ArgsUsage: "<assignee_id>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryTicketAndPrintResults(c.Args().First(), ticketIndexes["assignee_id"], ticketMap, orgMap, userMap)
+
+							return nil
+						},
+					},
+					{
+						Name:      "tags",
+						Usage:     "Query tickets by tag",
+						ArgsUsage: "<tag>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryTicketAndPrintResults(c.Args().First(), ticketIndexes["tags"], ticketMap, orgMap, userMap)
+
+							return nil
+						},
+					},
+					{
+						Name:      "has_incidents",
+						Usage:     "Query tickets by has_incidents",
+						ArgsUsage: "<has_incidents>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryTicketAndPrintResults(c.Args().First(), ticketIndexes["has_incidents"], ticketMap, orgMap, userMap)
+
+							return nil
+						},
+					},
+					{
+						Name:      "due_at",
+						Usage:     "Query tickets by due_at",
+						ArgsUsage: "<due_at>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryTicketAndPrintResults(c.Args().First(), ticketIndexes["due_at"], ticketMap, orgMap, userMap)
+
+							return nil
+						},
+					},
+					{
+						Name:      "via",
+						Usage:     "Query tickets by via",
+						ArgsUsage: "<via>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryTicketAndPrintResults(c.Args().First(), ticketIndexes["via"], ticketMap, orgMap, userMap)
+
 							return nil
 						},
 					},
@@ -444,10 +600,10 @@ func validateArgs(c *cli.Context) {
 	}
 }
 
-// queryUserAndPrintResults is a helper function used by `users` queries to print results
-func queryUserAndPrintResults(query string, verifiedIndexMap IndexMap, userMap UserMap, orgMap OrgMap, ticketMap TicketMap, submitterIDIndexMap IndexMap) {
+// queryUserAndPrintResults is a helper function used by `users` commands to print results
+func queryUserAndPrintResults(query string, fieldIndexMap IndexMap, userMap UserMap, orgMap OrgMap, ticketMap TicketMap, submitterIDIndexMap IndexMap) {
 	// get primary search result
-	users := getUsersByIndex(query, verifiedIndexMap, userMap)
+	users := getUsersByIndex(query, fieldIndexMap, userMap)
 	if len(users) == 0 {
 		fmt.Println("No users found")
 		os.Exit(1)
@@ -464,9 +620,10 @@ func queryUserAndPrintResults(query string, verifiedIndexMap IndexMap, userMap U
 	}
 }
 
-func queryOrgAndPrintResults(query string, orgNameIndexMap IndexMap, orgMap OrgMap, userMap UserMap, ticketMap TicketMap, ticketOrgIDMap IndexMap, userOrgIDMap IndexMap) {
+// queryOrgAndPrintResults is a helper function used by `organizations` commands to print results
+func queryOrgAndPrintResults(query string, fieldIndexMap IndexMap, orgMap OrgMap, userMap UserMap, ticketMap TicketMap, ticketOrgIDMap IndexMap, userOrgIDMap IndexMap) {
 	// get primary search result
-	orgs := getOrgsByIndex(query, orgNameIndexMap, orgMap)
+	orgs := getOrgsByIndex(query, fieldIndexMap, orgMap)
 	if len(orgs) == 0 {
 		fmt.Println("No orgs found")
 		os.Exit(1)
@@ -475,5 +632,25 @@ func queryOrgAndPrintResults(query string, orgNameIndexMap IndexMap, orgMap OrgM
 	for _, org := range orgs {
 		users, tickets := getOrgUsersAndTickets(org, userMap, ticketMap, ticketOrgIDMap, userOrgIDMap)
 		displayOrg(org, users, tickets)
+	}
+}
+
+// queryTicketAndPrintResults is a helper function used by `tickets` commands to print results
+func queryTicketAndPrintResults(query string, fieldIndexMap IndexMap, ticketMap TicketMap, orgMap OrgMap, userMap UserMap) {
+	// get primary search result
+	tickets := getTicketsByIndex(query, fieldIndexMap, ticketMap)
+	if len(tickets) == 0 {
+		fmt.Println("No Tickets found")
+		os.Exit(1)
+	}
+	// get secondary results
+	// TODO print errors at the end
+	for _, ticket := range tickets {
+		org, user, err := getTicketOrgAndUser(ticket, orgMap, userMap)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			displayTicket(ticket, org, user)
+		}
 	}
 }
