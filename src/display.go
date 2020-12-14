@@ -103,6 +103,6 @@ func displayTicket(ticket *ticket, org *organization, user *user) {
 	fmt.Println("ORGANIZATION:")
 	fmt.Printf("id = %s, name = %s\n", org.ID, org.Name)
 	fmt.Println("USER:")
-	fmt.Printf("- %s, %s\n", user.ID, user.Name)
+	fmt.Printf("id = %s, name = %s\n", user.ID, user.Name)
 	fmt.Println("")
 }
