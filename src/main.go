@@ -6,6 +6,9 @@ import (
 )
 
 func main() {
+	// load cache files
+	// if err, load cache from source files and write cache files to disk
+
 	// load source data from json files into slices
 	orgs, users, tickets, err := loadData()
 	if err != nil {
