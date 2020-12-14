@@ -4,15 +4,17 @@
 // These caches are created to allow for O(1) search times
 package main
 
-import "strconv"
+import (
+	"strconv"
+)
 
 // IndexMap is a generic type to represent the secondary
-// index of a domain type's field
+// index of a domain type's field (e.g. name, details etc.)
 // The value is []string since multiple values can match an index
 type IndexMap map[string][]string
 
 // IndexTypeMap is a generic type to hold all the secondary
-// indexes for a particular domain type
+// indexes for a particular domain type (user, ticket or org)
 type IndexTypeMap map[string]IndexMap
 
 // OrgMap is a map of all Organizations keyed to ID
@@ -26,8 +28,16 @@ type TicketMap map[string]*ticket
 
 func buildOrgCaches(orgs []*organization) (OrgMap, IndexTypeMap) {
 	orgMap := make(OrgMap)
+	// initialise index maps
 	indexTypeMap := make(IndexTypeMap)
 	indexTypeMap["name"] = make(IndexMap)
+	indexTypeMap["url"] = make(IndexMap)
+	indexTypeMap["external_id"] = make(IndexMap)
+	indexTypeMap["domain_names"] = make(IndexMap)
+	indexTypeMap["created_at"] = make(IndexMap)
+	indexTypeMap["details"] = make(IndexMap)
+	indexTypeMap["shared_tickets"] = make(IndexMap)
+	indexTypeMap["tags"] = make(IndexMap)
 
 	for _, org := range orgs {
 		orgID := org.ID.String()
@@ -36,6 +46,17 @@ func buildOrgCaches(orgs []*organization) (OrgMap, IndexTypeMap) {
 
 		// build indexes
 		indexTypeMap["name"][org.Name] = append(indexTypeMap["name"][org.Name], orgID)
+		indexTypeMap["url"][org.URL] = append(indexTypeMap["url"][org.URL], orgID)
+		indexTypeMap["external_id"][org.ExternalID] = append(indexTypeMap["external_id"][org.ExternalID], orgID)
+		indexTypeMap["created_at"][org.CreatedAt] = append(indexTypeMap["created_at"][org.CreatedAt], orgID)
+		indexTypeMap["details"][org.Details] = append(indexTypeMap["details"][org.Details], orgID)
+		indexTypeMap["shared_tickets"][strconv.FormatBool(org.SharedTickets)] = append(indexTypeMap["shared_tickets"][strconv.FormatBool(org.SharedTickets)], orgID)
+		for _, tag := range org.Tags {
+			indexTypeMap["tags"][tag] = append(indexTypeMap["tags"][tag], orgID)
+		}
+		for _, dn := range org.DomainNames {
+			indexTypeMap["domain_names"][dn] = append(indexTypeMap["domain_names"][dn], orgID)
+		}
 	}
 	return orgMap, indexTypeMap
 }

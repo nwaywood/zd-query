@@ -288,17 +288,92 @@ func buildCLIApp(orgMap OrgMap, orgIndexes IndexTypeMap, userMap UserMap, userIn
 						Action: func(c *cli.Context) error {
 							validateArgs(c)
 
-							// get primary search result
-							orgs := getOrgsByIndex(c.Args().First(), orgIndexes["name"], orgMap)
-							if len(orgs) == 0 {
-								fmt.Println("No orgs found")
-								os.Exit(1)
-							}
-							// get secondary results
-							for _, org := range orgs {
-								users, tickets := getOrgUsersAndTickets(org, userMap, ticketMap, ticketIndexes["organization_id"], userIndexes["organization_id"])
-								displayOrg(org, users, tickets)
-							}
+							queryOrgAndPrintResults(c.Args().First(), orgIndexes["name"], orgMap, userMap, ticketMap, ticketIndexes["organization_id"], userIndexes["organization_id"])
+
+							return nil
+						},
+					},
+					{
+						Name:      "url",
+						Usage:     "Query orgs by url",
+						ArgsUsage: "<url>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryOrgAndPrintResults(c.Args().First(), orgIndexes["url"], orgMap, userMap, ticketMap, ticketIndexes["organization_id"], userIndexes["organization_id"])
+
+							return nil
+						},
+					},
+					{
+						Name:      "external_id",
+						Usage:     "Query orgs by external_id",
+						ArgsUsage: "<external_id>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryOrgAndPrintResults(c.Args().First(), orgIndexes["external_id"], orgMap, userMap, ticketMap, ticketIndexes["organization_id"], userIndexes["organization_id"])
+
+							return nil
+						},
+					},
+					{
+						Name:      "domain_names",
+						Usage:     "Query orgs by domain_name",
+						ArgsUsage: "<domain_name>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryOrgAndPrintResults(c.Args().First(), orgIndexes["domain_names"], orgMap, userMap, ticketMap, ticketIndexes["organization_id"], userIndexes["organization_id"])
+
+							return nil
+						},
+					},
+					{
+						Name:      "created_at",
+						Usage:     "Query orgs by created_at",
+						ArgsUsage: "<created_at>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryOrgAndPrintResults(c.Args().First(), orgIndexes["created_at"], orgMap, userMap, ticketMap, ticketIndexes["organization_id"], userIndexes["organization_id"])
+
+							return nil
+						},
+					},
+					{
+						Name:      "details",
+						Usage:     "Query orgs by details",
+						ArgsUsage: "<details>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryOrgAndPrintResults(c.Args().First(), orgIndexes["details"], orgMap, userMap, ticketMap, ticketIndexes["organization_id"], userIndexes["organization_id"])
+
+							return nil
+						},
+					},
+					{
+						Name:      "shared_tickets",
+						Usage:     "Query orgs by shared_tickets",
+						ArgsUsage: "<shared_tickets>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryOrgAndPrintResults(c.Args().First(), orgIndexes["shared_tickets"], orgMap, userMap, ticketMap, ticketIndexes["organization_id"], userIndexes["organization_id"])
+
+							return nil
+						},
+					},
+					{
+						Name:      "tags",
+						Usage:     "Query orgs by tag",
+						ArgsUsage: "<tag>",
+						Action: func(c *cli.Context) error {
+							validateArgs(c)
+
+							queryOrgAndPrintResults(c.Args().First(), orgIndexes["tags"], orgMap, userMap, ticketMap, ticketIndexes["organization_id"], userIndexes["organization_id"])
+
 							return nil
 						},
 					},
@@ -386,5 +461,19 @@ func queryUserAndPrintResults(query string, verifiedIndexMap IndexMap, userMap U
 		} else {
 			displayUser(user, org, tickets)
 		}
+	}
+}
+
+func queryOrgAndPrintResults(query string, orgNameIndexMap IndexMap, orgMap OrgMap, userMap UserMap, ticketMap TicketMap, ticketOrgIDMap IndexMap, userOrgIDMap IndexMap) {
+	// get primary search result
+	orgs := getOrgsByIndex(query, orgNameIndexMap, orgMap)
+	if len(orgs) == 0 {
+		fmt.Println("No orgs found")
+		os.Exit(1)
+	}
+	// get secondary results
+	for _, org := range orgs {
+		users, tickets := getOrgUsersAndTickets(org, userMap, ticketMap, ticketOrgIDMap, userOrgIDMap)
+		displayOrg(org, users, tickets)
 	}
 }
