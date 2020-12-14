@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/fatih/color"
 	"github.com/urfave/cli/v2"
 )
 
@@ -609,14 +610,17 @@ func queryUserAndPrintResults(query string, fieldIndexMap IndexMap, userMap User
 		os.Exit(1)
 	}
 	// get secondary results
-	// TODO print errors at the end
+	errs := []string{}
 	for _, user := range users {
 		org, tickets, err := getUserOrgAndTickets(user, orgMap, ticketMap, submitterIDIndexMap)
 		if err != nil {
-			fmt.Println(err)
+			errs = append(errs, err.Error())
 		} else {
 			displayUser(user, org, tickets)
 		}
+	}
+	for _, e := range errs {
+		color.Red(e)
 	}
 }
 
@@ -644,13 +648,16 @@ func queryTicketAndPrintResults(query string, fieldIndexMap IndexMap, ticketMap 
 		os.Exit(1)
 	}
 	// get secondary results
-	// TODO print errors at the end
+	errs := []string{}
 	for _, ticket := range tickets {
 		org, user, err := getTicketOrgAndUser(ticket, orgMap, userMap)
 		if err != nil {
-			fmt.Println(err)
+			errs = append(errs, err.Error())
 		} else {
 			displayTicket(ticket, org, user)
 		}
+	}
+	for _, e := range errs {
+		color.Red(e)
 	}
 }
