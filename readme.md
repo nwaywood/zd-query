@@ -20,6 +20,12 @@ Example usage commands:
 
 To achieve the desired performance, this application caches data to make subsequent query fast. If you need to regenerate this cache (e.g. because the source data has changed), this can be done with `make clear-cache`
 
+## Testing
+
+Run all the tests with:
+
+`make test`
+
 ## Assumptions and Design Decisions
 
 ### Design Decisions

@@ -624,6 +624,7 @@ func queryUserAndPrintResults(query string, fieldIndexMap IndexMap, userMap User
 			displayUser(user, org, tickets)
 		}
 	}
+	// print any errors encountered at the end of the output to ensure they are seen
 	for _, e := range errs {
 		color.Red(e)
 	}
@@ -662,6 +663,7 @@ func queryTicketAndPrintResults(query string, fieldIndexMap IndexMap, ticketMap 
 			displayTicket(ticket, org, user)
 		}
 	}
+	// print any errors encountered at the end of the output to ensure they are seen
 	for _, e := range errs {
 		color.Red(e)
 	}
