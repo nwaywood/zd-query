@@ -1,5 +1,5 @@
 // display.go contains functions for pretty printing results
-// from queries in a human readable format
+// from queries in a human readable format to stdout
 package main
 
 import (
@@ -28,8 +28,10 @@ func displayUser(user *user, org *organization, tickets []*ticket) {
 	fmt.Printf("signature = %s\n", user.Signature)
 	fmt.Printf("tags = %v\n", user.Tags)
 	fmt.Printf("suspended = %v, role = %s\n", user.Suspended, user.Role)
+	fmt.Println("")
 	fmt.Println("ORGANIZATION:")
 	fmt.Printf("id = %s, name = %s\n", org.ID, org.Name)
+	fmt.Println("")
 	fmt.Println("TICKETS:")
 	if len(tickets) == 0 {
 		fmt.Println("No Tickets for User")
@@ -58,6 +60,7 @@ func displayOrg(org *organization, users []*user, tickets []*ticket) {
 	fmt.Printf("shared tickets = %v\n", org.SharedTickets)
 	fmt.Printf("domain names = %s\n", org.DomainNames)
 	fmt.Printf("tags = %s\n", org.Tags)
+	fmt.Println("")
 	fmt.Println("USERS:")
 	if len(users) == 0 {
 		fmt.Println("No Users for Organization")
@@ -69,6 +72,7 @@ func displayOrg(org *organization, users []*user, tickets []*ticket) {
 		}
 		table.Render()
 	}
+	fmt.Println("")
 	fmt.Println("TICKETS:")
 	if len(tickets) == 0 {
 		fmt.Println("No Tickets for Organization")
@@ -100,8 +104,10 @@ func displayTicket(ticket *ticket, org *organization, user *user) {
 	fmt.Printf("due at = %s\n", ticket.DueAt)
 	fmt.Printf("has incidents = %v\n", ticket.HasIncidents)
 	fmt.Printf("tags = %v\n", ticket.Tags)
+	fmt.Println("")
 	fmt.Println("ORGANIZATION:")
 	fmt.Printf("id = %s, name = %s\n", org.ID, org.Name)
+	fmt.Println("")
 	fmt.Println("USER:")
 	fmt.Printf("id = %s, name = %s\n", user.ID, user.Name)
 	fmt.Println("")

@@ -1,4 +1,4 @@
-// caches.go contains the helper functions and data structure for
+// caches.go contains the helper functions and data structures for
 // creating the caches from the source data
 //
 // These caches are created to allow for O(1) search times
@@ -8,22 +8,22 @@ import (
 	"strconv"
 )
 
+// IndexTypeMap is a generic type to hold all the secondary
+// indexes for a particular domain type (user, ticket or org)
+type IndexTypeMap map[string]IndexMap
+
 // IndexMap is a generic type to represent the secondary
 // index of a domain type's field (e.g. name, details etc.)
 // The value is []string since multiple values can match an index
 type IndexMap map[string][]string
 
-// IndexTypeMap is a generic type to hold all the secondary
-// indexes for a particular domain type (user, ticket or org)
-type IndexTypeMap map[string]IndexMap
-
-// OrgMap is a map of all Organizations keyed to ID
+// OrgMap is a map of all Organizations keyed by ID
 type OrgMap map[string]*organization
 
-// UserMap is a map of all Users keyed to ID
+// UserMap is a map of all Users keyed by ID
 type UserMap map[string]*user
 
-// TicketMap is a map of all Tickets keyed to ID
+// TicketMap is a map of all Tickets keyed by ID
 type TicketMap map[string]*ticket
 
 func buildOrgCaches(orgs []*organization) (OrgMap, IndexTypeMap) {

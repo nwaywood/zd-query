@@ -9,7 +9,7 @@ import (
 func main() {
 	var err error
 
-	// declare data structures for the indexes
+	// declare data structures for the caches
 	var orgMap OrgMap
 	var userMap UserMap
 	var ticketMap TicketMap

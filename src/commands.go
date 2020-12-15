@@ -1,4 +1,5 @@
 // commands.go contains all the scaffold code required to construct the cli app
+// commands and sub-commands
 package main
 
 import (
@@ -10,9 +11,11 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+// buildCLIApp is a closure to construct the cli commands with the context of the caches
 func buildCLIApp(orgMap OrgMap, orgIndexes IndexTypeMap, userMap UserMap, userIndexes IndexTypeMap, ticketMap TicketMap, ticketIndexes IndexTypeMap) *cli.App {
 	return &cli.App{
 		Commands: []*cli.Command{
+			// create all user sub-commands
 			{
 				Name:  "users",
 				Usage: "Query users by a particular user value",
@@ -258,6 +261,7 @@ func buildCLIApp(orgMap OrgMap, orgIndexes IndexTypeMap, userMap UserMap, userIn
 					},
 				},
 			},
+			// create all organization sub-commands
 			{
 				Name:  "organizations",
 				Usage: "Query organizations by a particular organization value",
@@ -380,6 +384,7 @@ func buildCLIApp(orgMap OrgMap, orgIndexes IndexTypeMap, userMap UserMap, userIn
 					},
 				},
 			},
+			// create all ticket sub-commands
 			{
 				Name:  "tickets",
 				Usage: "Query tickets by a particular ticket value",
@@ -601,7 +606,7 @@ func validateArgs(c *cli.Context) {
 	}
 }
 
-// queryUserAndPrintResults is a helper function used by `users` commands to print results
+// queryUserAndPrintResults is a helper function used by `users` commands to print results to stdout
 func queryUserAndPrintResults(query string, fieldIndexMap IndexMap, userMap UserMap, orgMap OrgMap, ticketMap TicketMap, submitterIDIndexMap IndexMap) {
 	// get primary search result
 	users := getUsersByIndex(query, fieldIndexMap, userMap)
@@ -624,7 +629,7 @@ func queryUserAndPrintResults(query string, fieldIndexMap IndexMap, userMap User
 	}
 }
 
-// queryOrgAndPrintResults is a helper function used by `organizations` commands to print results
+// queryOrgAndPrintResults is a helper function used by `organizations` commands to print results to stdout
 func queryOrgAndPrintResults(query string, fieldIndexMap IndexMap, orgMap OrgMap, userMap UserMap, ticketMap TicketMap, ticketOrgIDMap IndexMap, userOrgIDMap IndexMap) {
 	// get primary search result
 	orgs := getOrgsByIndex(query, fieldIndexMap, orgMap)
@@ -639,7 +644,7 @@ func queryOrgAndPrintResults(query string, fieldIndexMap IndexMap, orgMap OrgMap
 	}
 }
 
-// queryTicketAndPrintResults is a helper function used by `tickets` commands to print results
+// queryTicketAndPrintResults is a helper function used by `tickets` commands to print results to stdout
 func queryTicketAndPrintResults(query string, fieldIndexMap IndexMap, ticketMap TicketMap, orgMap OrgMap, userMap UserMap) {
 	// get primary search result
 	tickets := getTicketsByIndex(query, fieldIndexMap, ticketMap)
