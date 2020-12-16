@@ -1,4 +1,4 @@
-// commands.go contains all the scaffold code required to construct the cli app
+// commands.go contains all the boilerplate code required to construct the cli app
 // commands and sub-commands
 package main
 
