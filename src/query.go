@@ -60,9 +60,11 @@ func getTicketOrgAndUser(ticket *ticket, orgMap OrgMap, userMap UserMap) (*organ
 // all the matches to user structs using userMap
 func getUsersByIndex(key string, indexMap IndexMap, userMap UserMap) []*user {
 	ids := indexMap[key]
-	var users []*user
-	for _, id := range ids {
-		users = append(users, userMap[id])
+	users := []*user{}
+	if ids != nil {
+		for _, id := range ids {
+			users = append(users, userMap[id])
+		}
 	}
 	return users
 }
@@ -71,9 +73,11 @@ func getUsersByIndex(key string, indexMap IndexMap, userMap UserMap) []*user {
 // all the matches to orgs structs using orgMap
 func getOrgsByIndex(key string, indexMap IndexMap, orgMap OrgMap) []*organization {
 	ids := indexMap[key]
-	var orgs []*organization
-	for _, id := range ids {
-		orgs = append(orgs, orgMap[id])
+	orgs := []*organization{}
+	if ids != nil {
+		for _, id := range ids {
+			orgs = append(orgs, orgMap[id])
+		}
 	}
 	return orgs
 }
@@ -82,9 +86,11 @@ func getOrgsByIndex(key string, indexMap IndexMap, orgMap OrgMap) []*organizatio
 // all the matches to ticket structs using ticketMap
 func getTicketsByIndex(key string, indexMap IndexMap, ticketMap TicketMap) []*ticket {
 	ids := indexMap[key]
-	var tickets []*ticket
-	for _, id := range ids {
-		tickets = append(tickets, ticketMap[id])
+	tickets := []*ticket{}
+	if ids != nil {
+		for _, id := range ids {
+			tickets = append(tickets, ticketMap[id])
+		}
 	}
 	return tickets
 }
